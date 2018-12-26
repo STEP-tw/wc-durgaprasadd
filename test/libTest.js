@@ -12,10 +12,10 @@ const reader = fileName => contents[fileName];
 describe('wc', () => {
   it('should return wordCount, lineCount and characterCount', () => {
     let actual = wc(['file'], reader);
-    let expected = '\t1\t1\t1 file';
+    let expected = '\t0\t1\t1 file';
     assert.deepEqual(actual, expected);
   });
-  it('should not count extra new line character at last', () => {
+  it('should return lineCount of how many \\n characters present', () => {
     let actual = wc(['file1'], reader);
     let expected = '\t1\t1\t2 file1';
     assert.deepEqual(actual, expected);
