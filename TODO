@@ -1,2 +1,5 @@
 * write code for default case without options.
 * change the name of wc function.
+* handle output format
+* handle each count separately
+* write parser file.

@@ -20,4 +20,17 @@ describe('wc', () => {
     let expected = '\t1\t1\t2 file1';
     assert.deepEqual(actual, expected);
   });
+  it('should return only count which present in args', () => {
+    let actual = wc(['-l', 'file1'], reader);
+    let expected = '\t1 file1';
+    assert.deepEqual(actual, expected);
+
+    actual = wc(['-w', 'file1'], reader);
+    expected = '\t1 file1';
+    assert.deepEqual(actual, expected);
+
+    actual = wc(['-c', 'file1'], reader);
+    expected = '\t2 file1';
+    assert.deepEqual(actual, expected);
+  });
 });

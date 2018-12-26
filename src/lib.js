@@ -1,3 +1,5 @@
+const { parse } = require('./parser.js');
+
 const lineCounter = function(data) {
   return data.split('\n').length - 1;
 };
@@ -11,11 +13,22 @@ const characterCounter = function(data) {
 };
 
 const wc = function(args, reader) {
-  let content = reader(args[0], 'utf8');
-  let wordCount = wordCounter(content);
-  let characterCount = characterCounter(content);
-  let lineCount = lineCounter(content);
-  return ['', lineCount, wordCount, characterCount].join('\t') + ` ${args[0]}`;
+  let { options, fileName } = parse(args);
+  let content = reader(fileName, 'utf8');
+  let output = '';
+  if (options.includes('-l')) {
+    output += '\t' + lineCounter(content);
+  }
+
+  if (options.includes('-w')) {
+    output += '\t' + wordCounter(content);
+  }
+
+  if (options.includes('-c')) {
+    output += '\t' + characterCounter(content);
+  }
+
+  return output + ' ' + fileName;
 };
 
 module.exports = { wc };
