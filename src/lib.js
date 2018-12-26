@@ -7,7 +7,7 @@ const wordCounter = function(data) {
 };
 
 const characterCounter = function(data) {
-  return data.split('').length;
+  return data.length;
 };
 
 const wc = function(args, reader) {
