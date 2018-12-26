@@ -1,5 +1,7 @@
 const lineCounter = function(data) {
-  return data.trimRight('\n').split('\n').length;
+  let numberOfLines = data.split('\n').length;
+  if (data[data.length - 1] === '\n') return numberOfLines - 1;
+  return numberOfLines;
 };
 
 const wordCounter = function(data) {
