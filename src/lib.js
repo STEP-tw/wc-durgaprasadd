@@ -3,11 +3,7 @@ const lineCounter = function(data) {
 };
 
 const wordCounter = function(data) {
-  return data
-    .split('\n')
-    .join(' ')
-    .split(' ')
-    .filter(x => x !== '').length;
+  return data.split(/ |\n/).filter(x => x !== '').length;
 };
 
 const characterCounter = function(data) {
