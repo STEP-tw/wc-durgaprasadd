@@ -33,4 +33,9 @@ describe('wc', () => {
     expected = '\t2 file1';
     assert.deepEqual(actual, expected);
   });
+  it('should return combined counts when args contains combined options', () => {
+    let actual = wc(['-wl', 'file1'], reader);
+    let expected = '\t1\t1 file1';
+    assert.deepEqual(actual, expected);
+  });
 });
