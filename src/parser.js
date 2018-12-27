@@ -1,10 +1,10 @@
 const parse = function(args) {
   let options = args.filter(arg => arg.startsWith('-'));
-  let fileName = args[options.length];
+  let fileNames = args.slice(options.length);
   if (options.length == 0) {
     options = ['-l', '-w', '-c'];
   }
-  return { options, fileName };
+  return { options, fileNames };
 };
 
 module.exports = { parse };

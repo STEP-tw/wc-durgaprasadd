@@ -1,5 +1,5 @@
 const assert = require('assert');
-const { wc } = require('../src/lib.js');
+const { wc, wcForSingleFile } = require('../src/lib.js');
 
 const contents = {
   file: 'a',
@@ -36,6 +36,24 @@ describe('wc', () => {
   it('should return combined counts when args contains combined options', () => {
     let actual = wc(['-wl', 'file1'], reader);
     let expected = '\t1\t1 file1';
+    assert.deepEqual(actual, expected);
+  });
+  it('should return total for multiple files', () => {
+    let actual = wc(['-wl', 'file', 'file1'], reader);
+    let expected = ['\t0\t1 file', '\t1\t1 file1', '\t1\t2 total'].join('\n');
+    assert.deepEqual(actual, expected);
+  });
+});
+
+describe('wcForSingleFile', () => {
+  it('should return counts of singleFile for the options given', () => {
+    let actual = wcForSingleFile(['-l', '-w'], reader, 'file');
+    let expected = ['', 0, 1];
+    assert.deepEqual(actual, expected);
+  });
+  it('should return counts of singleFile for combined options also', () => {
+    let actual = wcForSingleFile(['-wl'], reader, 'file');
+    let expected = ['', 0, 1];
     assert.deepEqual(actual, expected);
   });
 });
