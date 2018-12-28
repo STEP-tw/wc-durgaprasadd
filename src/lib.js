@@ -12,8 +12,8 @@ const characterCounter = function(data) {
   return data.length;
 };
 const totalOfWc = function(wcOfAllFiles) {
-  let total = [''];
-  for (let index = 1; index < wcOfAllFiles[0].length; index++) {
+  let total = [];
+  for (let index = 0; index < wcOfAllFiles[0].length; index++) {
     total.push(wcOfAllFiles.reduce((x, y) => y[index] + x, 0));
   }
   return total;
@@ -23,36 +23,28 @@ const outputFormat = function(wcOfAllFiles, fileNames) {
 };
 
 const wc = function(args, reader) {
-  let { options, fileNames } = parse(args);
+  let { optionArgs, fileNames } = parse(args);
   if (fileNames.length == 1) {
     return (
-      wcForSingleFile(options, reader, fileNames[0]).join('\t') +
+      wcForSingleFile(optionArgs, reader, fileNames[0]).join('\t') +
       ' ' +
       fileNames[0]
     );
   }
-  let output = fileNames.map(wcForSingleFile.bind(null, options, reader));
+  let output = fileNames.map(wcForSingleFile.bind(null, optionArgs, reader));
   output.push(totalOfWc(output));
   fileNames.push('total');
   return outputFormat(output, fileNames).join('\n');
 };
 
 const wcForSingleFile = function(options, reader, fileName) {
+  const optionFunctions = {
+    lineCount: lineCounter,
+    wordCount: wordCounter,
+    characterCount: characterCounter
+  };
   let content = reader(fileName, 'utf8');
-  let output = [''];
-  if (options.includes('-l') || options[0].includes('l')) {
-    output.push(lineCounter(content));
-  }
-
-  if (options.includes('-w') || options[0].includes('w')) {
-    output.push(wordCounter(content));
-  }
-
-  if (options.includes('-c') || options[0].includes('c')) {
-    output.push(characterCounter(content));
-  }
-
-  return output;
+  return options.map(option => optionFunctions[option](content));
 };
 
 module.exports = { wc, wcForSingleFile };
