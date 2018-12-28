@@ -11,6 +11,7 @@ const wordCounter = function(data) {
 const characterCounter = function(data) {
   return data.length;
 };
+
 const totalOfWc = function(wcOfAllFiles) {
   let total = [];
   for (let index = 0; index < wcOfAllFiles[0].length; index++) {
@@ -18,6 +19,7 @@ const totalOfWc = function(wcOfAllFiles) {
   }
   return total;
 };
+
 const outputFormat = function(wcOfAllFiles, fileNames) {
   return wcOfAllFiles.map((x, i) => x.join('\t') + ' ' + fileNames[i]);
 };
@@ -31,10 +33,10 @@ const wc = function(args, reader) {
       fileNames[0]
     );
   }
-  let output = fileNames.map(wcForSingleFile.bind(null, optionArgs, reader));
-  output.push(totalOfWc(output));
+  let counts = fileNames.map(wcForSingleFile.bind(null, optionArgs, reader));
+  counts.push(totalOfWc(counts));
   fileNames.push('total');
-  return outputFormat(output, fileNames).join('\n');
+  return outputFormat(counts, fileNames).join('\n');
 };
 
 const wcForSingleFile = function(options, reader, fileName) {
