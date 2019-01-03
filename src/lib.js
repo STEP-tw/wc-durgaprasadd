@@ -24,28 +24,66 @@ const outputFormat = function(wcOfAllFiles, fileNames) {
   return wcOfAllFiles.map((x, i) => x.join('\t') + ' ' + fileNames[i]);
 };
 
-const wc = function(args, reader) {
-  let { optionArgs, fileNames } = parse(args);
+const getWcResult = function(optionArgs, fileNames, fileContents) {
   if (fileNames.length == 1) {
     return (
-      wcForSingleFile(optionArgs, reader, fileNames[0]).join('\t') +
+      wcForSingleFile(optionArgs, fileContents, fileNames[0]).join('\t') +
       ' ' +
       fileNames[0]
     );
   }
-  let counts = fileNames.map(wcForSingleFile.bind(null, optionArgs, reader));
+
+  let counts = fileNames.map(
+    wcForSingleFile.bind(null, optionArgs, fileContents)
+  );
+
   counts.push(totalOfWc(counts));
   fileNames.push('total');
   return outputFormat(counts, fileNames).join('\n');
 };
 
-const wcForSingleFile = function(options, reader, fileName) {
+const getContent = function(
+  optionArgs,
+  fileNames,
+  fileContents,
+  range,
+  reader,
+  print,
+  fileName
+) {
+  reader(fileName, 'utf8', (err, data) => {
+    fileContents[fileName] = data;
+    if (Object.keys(fileContents).length == range) {
+      print.log(getWcResult(optionArgs, fileNames, fileContents));
+    }
+  });
+};
+
+const wc = function(args, reader, print) {
+  let { optionArgs, fileNames } = parse(args);
+  let uniqFileNames = fileNames.reduce((list, element) => {
+    if (!list.includes(element)) list.push(element);
+    return list;
+  }, []);
+  let getContentsBound = getContent.bind(
+    null,
+    optionArgs,
+    fileNames,
+    {},
+    uniqFileNames.length,
+    reader,
+    print
+  );
+  uniqFileNames.forEach(getContentsBound);
+};
+
+const wcForSingleFile = function(options, fileContents, fileName) {
   const optionFunctions = {
     lineCount: lineCounter,
     wordCount: wordCounter,
     characterCount: characterCounter
   };
-  let content = reader(fileName, 'utf8');
+  let content = fileContents[fileName];
   return options.map(option => optionFunctions[option](content));
 };
 

@@ -1,4 +1,4 @@
 const { wc } = require('./src/lib.js');
-const readFileSync = require('fs').readFileSync;
+const readFile = require('fs').readFile;
 
-console.log(wc(process.argv.slice(2), readFileSync));
+wc(process.argv.slice(2), readFile, console);
